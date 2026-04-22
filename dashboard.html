@@ -1,0 +1,231 @@
+
+<style>
+.db-wrap { padding: 1rem 0; font-family: var(--font-sans); }
+.db-section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); letter-spacing: 0.05em; text-transform: uppercase; margin: 1.5rem 0 0.75rem; }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 0.5rem; }
+.kpi-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.85rem 1rem; }
+.kpi-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.kpi-value { font-size: 22px; font-weight: 500; }
+.kpi-sub { font-size: 11px; margin-top: 3px; }
+.indicator-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.indicator-table th { text-align: left; padding: 8px 10px; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); }
+.indicator-table td { padding: 9px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); vertical-align: middle; color: var(--color-text-primary); }
+.indicator-table tr:last-child td { border-bottom: none; }
+.badge { display: inline-block; padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 500; }
+.badge-green { background: #EAF3DE; color: #3B6D11; }
+.badge-orange { background: #FAEEDA; color: #854F0B; }
+.badge-red { background: #FCEBEB; color: #A32D2D; }
+.tab-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+.tab-btn { padding: 6px 14px; border-radius: var(--border-radius-md); font-size: 13px; font-weight: 500; cursor: pointer; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); }
+.tab-btn.active { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+.panel { display: none; }
+.panel.active { display: block; }
+.action-link { font-size: 11px; color: var(--color-text-info); cursor: pointer; text-decoration: underline; }
+.chart-bar-wrap { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.bar-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.bar-label { width: 130px; color: var(--color-text-secondary); text-align: right; flex-shrink: 0; }
+.bar-track { flex: 1; background: var(--color-background-secondary); border-radius: 99px; height: 10px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 99px; }
+.bar-val { width: 36px; font-weight: 500; color: var(--color-text-primary); }
+.legend-row { display: flex; gap: 16px; font-size: 11px; color: var(--color-text-secondary); margin-top: 0.5rem; }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; }
+</style>
+
+<div class="db-wrap">
+  <div class="tab-row">
+    <button class="tab-btn active" onclick="switchTab('prod')">Production</button>
+    <button class="tab-btn" onclick="switchTab('veille')">Veille</button>
+    <button class="tab-btn" onclick="switchTab('budget')">Budget</button>
+  </div>
+
+  <!-- PRODUCTION -->
+  <div class="panel active" id="panel-prod">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Disponibilité infra cloud</div>
+        <div class="kpi-value" style="color:#3B6D11;">99,97 %</div>
+        <div class="kpi-sub" style="color:var(--color-text-secondary);">Seuil cible : &gt; 99,9 %</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Latence Hub → Siège</div>
+        <div class="kpi-value" style="color:#3B6D11;">8 ms</div>
+        <div class="kpi-sub" style="color:var(--color-text-secondary);">Seuil alerte : &gt; 30 ms</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">CVE critiques non patchées</div>
+        <div class="kpi-value" style="color:#A32D2D;">3</div>
+        <div class="kpi-sub" style="color:var(--color-text-secondary);">Seuil critique : &gt; 2</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">RPO/RTO Veeam validés</div>
+        <div class="kpi-value" style="color:#854F0B;">92 %</div>
+        <div class="kpi-sub" style="color:var(--color-text-secondary);">Seuil cible : 100 %</div>
+      </div>
+    </div>
+
+    <div class="db-section-title">Statut des indicateurs</div>
+    <table class="indicator-table">
+      <thead>
+        <tr>
+          <th>Indicateur</th>
+          <th>Valeur actuelle</th>
+          <th>Statut</th>
+          <th>Action recommandée</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Disponibilité OVH AZ1 + AZ2</td>
+          <td>99,97 %</td>
+          <td><span class="badge badge-green">OK</span></td>
+          <td style="color:var(--color-text-secondary);">Surveillance passive</td>
+        </tr>
+        <tr>
+          <td>Latence Hub → Siège</td>
+          <td>8 ms</td>
+          <td><span class="badge badge-green">OK</span></td>
+          <td style="color:var(--color-text-secondary);">Surveillance passive</td>
+        </tr>
+        <tr>
+          <td>CVE critiques non patchées</td>
+          <td>3 CVE</td>
+          <td><span class="badge badge-red">Critique</span></td>
+          <td><span class="action-link" onclick="sendPrompt('Quelles sont les actions prioritaires pour patcher les CVE critiques sur notre infrastructure BioLab ?')">Patch d'urgence sous 72h ↗</span></td>
+        </tr>
+        <tr>
+          <td>Jobs Veeam réussis (mensuel)</td>
+          <td>11/12 jobs</td>
+          <td><span class="badge badge-orange">Alerte</span></td>
+          <td><span class="action-link" onclick="sendPrompt('Un job de sauvegarde Veeam a échoué ce mois, quelles vérifications faire ?')">Vérifier la chaîne de sauvegarde ↗</span></td>
+        </tr>
+        <tr>
+          <td>Conformité HDS (certification OVH)</td>
+          <td>Certifié</td>
+          <td><span class="badge badge-green">OK</span></td>
+          <td style="color:var(--color-text-secondary);">Renouvellement dans 8 mois</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- VEILLE -->
+  <div class="panel" id="panel-veille">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Alertes ANSSI ce mois</div>
+        <div class="kpi-value" style="color:#854F0B;">5</div>
+        <div class="kpi-sub" style="color:var(--color-text-secondary);">Dont 2 concernent notre stack</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Mise à jour référentiel HDS</div>
+        <div class="kpi-value" style="color:#3B6D11;">Nov. 2024</div>
+        <div class="kpi-sub" style="color:var(--color-text-secondary);">Analyse effectuée</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Évolution tarif OVH</div>
+        <div class="kpi-value" style="color:#3B6D11;">0 %</div>
+        <div class="kpi-sub" style="color:var(--color-text-secondary);">Stable vs trimestre préc.</div>
+      </div>
+    </div>
+
+    <div class="db-section-title">Sources de veille actives</div>
+    <table class="indicator-table">
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Périodicité</th>
+          <th>Dernier check</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ANSSI — Bulletins de sécurité</td>
+          <td>Hebdomadaire</td>
+          <td>Il y a 3 jours</td>
+          <td><span class="badge badge-orange">2 alertes actives</span></td>
+        </tr>
+        <tr>
+          <td>CNIL — Actualités RGPD</td>
+          <td>Mensuelle</td>
+          <td>Ce mois</td>
+          <td><span class="badge badge-green">RAS</span></td>
+        </tr>
+        <tr>
+          <td>Référentiel HDS (ANS)</td>
+          <td>À chaque révision</td>
+          <td>Nov. 2024</td>
+          <td><span class="badge badge-green">Analysé</span></td>
+        </tr>
+        <tr>
+          <td>NVD / CVE — Composants stack</td>
+          <td>Hebdomadaire</td>
+          <td>Il y a 2 jours</td>
+          <td><span class="badge badge-red">3 CVE critiques</span></td>
+        </tr>
+        <tr>
+          <td>OVHcloud — Roadmap & tarifs</td>
+          <td>Trimestrielle</td>
+          <td>Ce mois</td>
+          <td><span class="badge badge-green">Stable</span></td>
+        </tr>
+        <tr>
+          <td>Gartner / Forrester — Tendances SD-WAN</td>
+          <td>Semestrielle</td>
+          <td>Il y a 4 mois</td>
+          <td><span class="badge badge-orange">À actualiser</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:10px;"><span class="action-link" onclick="sendPrompt('Fais-moi un résumé des dernières alertes ANSSI pertinentes pour une infrastructure SD-WAN OVH hébergeant des données de santé')">Résumer les alertes ANSSI pertinentes ↗</span></div>
+  </div>
+
+  <!-- BUDGET -->
+  <div class="panel" id="panel-budget">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Coût cloud mensuel réel</div>
+        <div class="kpi-value" style="color:#3B6D11;">2 910 €</div>
+        <div class="kpi-sub" style="color:var(--color-text-secondary);">Budget : 2 853 € (+2 %)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">TCO 5 ans (projeté)</div>
+        <div class="kpi-value" style="color:#3B6D11;">231 k€</div>
+        <div class="kpi-sub" style="color:var(--color-text-secondary);">Plafond projet : 900 k€</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Écart budgétaire</div>
+        <div class="kpi-value" style="color:#854F0B;">+ 2 %</div>
+        <div class="kpi-sub" style="color:var(--color-text-secondary);">Seuil alerte : 5 %</div>
+      </div>
+    </div>
+
+    <div class="db-section-title">Répartition des coûts mensuels (OVH)</div>
+    <div class="chart-bar-wrap">
+      <div class="bar-row"><div class="bar-label">Cœur réseau SD-WAN</div><div class="bar-track"><div class="bar-fill" style="width:20%;background:#185FA5;"></div></div><div class="bar-val">587 €</div></div>
+      <div class="bar-row"><div class="bar-label">App métier WinAnalyse</div><div class="bar-track"><div class="bar-fill" style="width:20%;background:#185FA5;"></div></div><div class="bar-val">587 €</div></div>
+      <div class="bar-row"><div class="bar-label">Stockage logs (5 To)</div><div class="bar-track"><div class="bar-fill" style="width:17%;background:#0F6E56;"></div></div><div class="bar-val">478 €</div></div>
+      <div class="bar-row"><div class="bar-label">Stockage data (4 To)</div><div class="bar-track"><div class="bar-fill" style="width:13%;background:#0F6E56;"></div></div><div class="bar-val">383 €</div></div>
+      <div class="bar-row"><div class="bar-label">Identité AD (HA)</div><div class="bar-track"><div class="bar-fill" style="width:5%;background:#854F0B;"></div></div><div class="bar-val">152 €</div></div>
+      <div class="bar-row"><div class="bar-label">Mgmt & Logs VM</div><div class="bar-track"><div class="bar-fill" style="width:8%;background:#854F0B;"></div></div><div class="bar-val">228 €</div></div>
+      <div class="bar-row"><div class="bar-label">Fichiers + Sauvegarde</div><div class="bar-track"><div class="bar-fill" style="width:13%;background:#993C1D;"></div></div><div class="bar-val">381 €</div></div>
+      <div class="bar-row"><div class="bar-label">DHCP/DNS (HA)</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:#993C1D;"></div></div><div class="bar-val">56 €</div></div>
+    </div>
+    <div class="legend-row">
+      <span><span class="legend-dot" style="background:#185FA5;"></span>Compute</span>
+      <span><span class="legend-dot" style="background:#0F6E56;"></span>Stockage</span>
+      <span><span class="legend-dot" style="background:#854F0B;"></span>Services</span>
+      <span><span class="legend-dot" style="background:#993C1D;"></span>Infra annexe</span>
+    </div>
+    <div style="margin-top:12px;"><span class="action-link" onclick="sendPrompt('Analyse les postes de coût OVH de BioLab et dis-moi où on peut optimiser sans dégrader la résilience')">Analyser les leviers d'optimisation ↗</span></div>
+  </div>
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
